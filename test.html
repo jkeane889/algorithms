@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Test Page</title>
+</head>
+<body>
+    <script>
+        
+        function TreeNode(val) {
+            this.val = val;
+            this.left = this.right = null;
+        }
+
+        let newTree = new TreeNode(1);
+        newTree.left = new TreeNode(2);
+        newTree.right = new TreeNode(null);
+        // newTree.left.left = new TreeNode(1);
+        // newTree.left.right = new TreeNode(3);
+        // newTree.right.left = new TreeNode(6);
+        // newTree.right.right = new TreeNode(9);
+
+        const invertTree = root => {
+            let originalTree = root
+
+            const invert = rootNode => {
+                if (!rootNode) {
+                    return rootNode
+                }
+
+                let temp = rootNode.right;
+                rootNode.right = rootNode.left;
+                rootNode.left = temp
+                invert(rootNode.left)
+                invert(rootNode.right)
+                return rootNode
+            }
+
+            return invert(originalTree)
+        };
+
+        console.log(invertTree(newTree))
+
+    </script>
+</body>
+</html>
