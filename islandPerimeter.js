@@ -54,21 +54,21 @@ const islandPerimeter = grid => {
     let perimSum = 0;
 
     for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[j].length; j++) {
-            if (grid[j] === 1) {
-                if (grid[i - 1][j] === 0 || !grid[i - 1][j]) {
+        for (let j = 0; j < grid[i].length; j++) {
+            if (grid[i][j] === 1) {
+                if (grid[i - 1] === undefined || grid[i - 1][j] === 0 || !grid[i - 1][j]) {
                     perimSum += 1    
                 }
 
-                if (grid[i][j + 1] === 0) {
+                if (grid[i][j + 1] === undefined || grid[i][j + 1] === 0) {
                     perimSum += 1
                 }
 
-                if (grid[i][j - 1] === 0) {
+                if (grid[i][j - 1] === undefined || grid[i][j - 1] === 0) {
                     perimSum += 1
                 }
 
-                if (grid[i + 1][j] === 0 || !grid[i + 1][j]) {
+                if (grid[i + 1] === undefined || grid[i + 1][j] === 0 || !grid[i + 1][j]) {
                     perimSum += 1
                 }
             }
