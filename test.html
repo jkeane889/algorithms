@@ -7,40 +7,44 @@
 </head>
 <body>
     <script>
+
+        var LinkedList = function() {
+            var list = {};
+            list.head = null;
+            list.tail = null;
+
+            list.addToTail = function(value) {
+                let newTail = Node(value);
+                
+                if (!list.head) {
+                    list.head = newTail;
+                };
+
+                if (list.tail) {
+                  list.tail.next = newTail;
+                };
+
+                list.tail = newTail;
+            };
+
+            
+        };
         
-        function TreeNode(val) {
-            this.val = val;
-            this.left = this.right = null;
-        }
+        var Node = function(value) {
+            var node = {};
 
-        let newTree = new TreeNode(1);
-        newTree.left = new TreeNode(2);
-        newTree.right = new TreeNode(null);
-        // newTree.left.left = new TreeNode(1);
-        // newTree.left.right = new TreeNode(3);
-        // newTree.right.left = new TreeNode(6);
-        // newTree.right.right = new TreeNode(9);
+            node.value = value;
+            node.next = null;
 
-        const invertTree = root => {
-            let originalTree = root
-
-            const invert = rootNode => {
-                if (!rootNode) {
-                    return rootNode
-                }
-
-                let temp = rootNode.right;
-                rootNode.right = rootNode.left;
-                rootNode.left = temp
-                invert(rootNode.left)
-                invert(rootNode.right)
-                return rootNode
-            }
-
-            return invert(originalTree)
+            return node;
         };
 
-        console.log(invertTree(newTree))
+        var deleteNode = function(node) {
+            let temp = node.next
+            node.val = temp.val
+            node.next = temp.next
+            delete node
+        };
 
     </script>
 </body>
