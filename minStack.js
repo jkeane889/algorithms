@@ -37,36 +37,40 @@ var MinStack = function() {
  * @return {void}
  */
 
-MinStack.prototype.push = function(x) {
-    if (!this.minStack.top) {
-        this.minStack.top = x
-        this.minStack[x] = x
-        this.minStack.size += 1
-    }
-
-    
+var MinStack = function() {
+    this.stack = {}
+    this.size = 0
 };
 
-/**
- * @return {void}
- */
+MinStack.prototype.push = function(x) {
+    this.size += 1
+    this.stack[this.size] = x
+};
 
 MinStack.prototype.pop = function() {
-        
+    let poppedVal = this.stack[this.size]
+    delete this.stack[this.size]
+    this.size -= 1
+    return poppedVal
 };
-
-/**
- * @return {number}
- */
 
 MinStack.prototype.top = function() {
-    
+    return this.stack[this.size]
 };
 
-/**
- * @return {number}
- */
-
 MinStack.prototype.getMin = function() {
-    
+    let values = Object.values(this.stack)
+    let min;
+
+    for (let i = 0; i < values.length; i++) {
+        if (min === undefined) {
+            min = values[i]
+        } else {
+            if (values[i] < min) {
+                min = values[i]
+            }
+        }
+    }
+
+    return min
 };
