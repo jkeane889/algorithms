@@ -58,9 +58,32 @@
                 remove coin from coinArray
 
 */
+        
+const memoize = (fn) => {
+    let cache = {};
+    return (...args) => {
+        let n = args[0];
+        if (n in cache) {
+            console.log('Fetching from cache', n);
+            return cache[n];
+        } else {
+            console.log('Calculating result', n);
+            let result = fn(n);
+            cache[n] = result;
+            return result;
+        }
+    }  
+};
 
-const coinChange = (coins, amount) => {
-    let minArray = null
+const coinChange = memoize((coins, amount) => {
+    let minArray = []
+
+    if (amount === 0) {
+        return 0
+    }
+
+    console.log(coins)
+    console.log(amount)
 
     const findSmallestCoinsCombo = (coinArr, coinsUsed, currentSum, total) => {
         if (!coinArr.length) {
@@ -68,7 +91,7 @@ const coinChange = (coins, amount) => {
         }
 
         if (currentSum === total) {
-            if (!minArray || coinsUsed.length < minArray.length) {
+            if (!minArray.length || coinsUsed.length < minArray.length) {
                 minArray = coinsUsed.slice()
                 return
             } else {
@@ -95,5 +118,25 @@ const coinChange = (coins, amount) => {
     }
 
     findSmallestCoinsCombo(coins, null, 0, amount)
-    return minArray.length
-};
+
+    if (minArray.length < 1) {
+        return -1
+    } else {
+        return minArray.length
+    }
+});
+
+console.log(coinChange([1, 2, 5], 11))
+
+// const factorial = memoize(
+//     (x) => {
+//         if (x === 0) {
+//             return 1;
+//         } else {
+//             return x * factorial(x - 1);
+//         }
+//     }
+// );
+
+// console.log(factorial(5)); // calculated
+// console.log(factorial(6)); // calculated for 6 and cached for 5
