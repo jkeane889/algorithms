@@ -59,84 +59,36 @@
 
 */
         
-const memoize = (fn) => {
-    let cache = {};
-    return (...args) => {
-        let n = args[0];
-        if (n in cache) {
-            console.log('Fetching from cache', n);
-            return cache[n];
-        } else {
-            console.log('Calculating result', n);
-            let result = fn(n);
-            cache[n] = result;
-            return result;
-        }
-    }  
-};
-
-const coinChange = memoize((coins, amount) => {
-    let minArray = []
+const coinChange = (coins, amount, memo = {}, firstIteration = true) => {
+    if (firstIteration) {
+        coins.sort((a, b) => b - a)
+    }
 
     if (amount === 0) {
         return 0
     }
 
-    console.log(coins)
-    console.log(amount)
+    let lowestSolution = Infinity
 
-    const findSmallestCoinsCombo = (coinArr, coinsUsed, currentSum, total) => {
-        if (!coinArr.length) {
-            return
-        }
+    for (let i = 0; i < coins.length; i++) {
+        let currentCoinVal = coins[i]
 
-        if (currentSum === total) {
-            if (!minArray.length || coinsUsed.length < minArray.length) {
-                minArray = coinsUsed.slice()
-                return
-            } else {
-                return
+        if (currentCoinVal <= amount) {
+            memo[amount - currentCoinVal] = 
+                typeof memo[amount - currentCoinVal] !== 'undefined' 
+                    ? memo[amount - currentCoinVal] : coinChange(coins, amount - currentCoinVal, memo, false)
+            
+            let result = 1 + memo[amount - currentCoinVal]
+
+            if (result < lowestSolution) {
+                lowestSolution = result
             }
-        }
-
-        if (currentSum > total) {
-            return
-        }
-
-        for (let i = 0; i < coinArr.length; i++) {            
-            if (!coinsUsed) {
-                coinsUsed = []
-            }
-
-            coinsUsed.push(coinArr[i])
-            let sum = coinsUsed.reduce((acc, elem) => { return acc + elem } )
-            if (sum <= total) {
-                findSmallestCoinsCombo(coinArr, coinsUsed, sum, total)
-            }
-            coinsUsed.pop()
         }
     }
 
-    findSmallestCoinsCombo(coins, null, 0, amount)
-
-    if (minArray.length < 1) {
-        return -1
-    } else {
-        return minArray.length
+    if (lowestSolution === Infinity && firstIteration) {
+        return - 1
     }
-});
 
-console.log(coinChange([1, 2, 5], 11))
-
-// const factorial = memoize(
-//     (x) => {
-//         if (x === 0) {
-//             return 1;
-//         } else {
-//             return x * factorial(x - 1);
-//         }
-//     }
-// );
-
-// console.log(factorial(5)); // calculated
-// console.log(factorial(6)); // calculated for 6 and cached for 5
+    return lowestSolution
+}
