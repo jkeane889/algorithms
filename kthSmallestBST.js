@@ -70,3 +70,34 @@
 
 */
 
+var TreeNode = function(val) {
+    this.val = val;
+    this.left = null
+    this.right = null;
+}
+
+var kthSmallest = function(rootNode, k) {
+    let nodes = []
+
+    const findNodes = node => {
+        if (node.left) {
+            findNodes(node.left)
+        }
+
+        nodes.push(node.val)
+
+        if (node.right) {
+            findNodes(node.right) 
+        }
+    }
+
+    findNodes(rootNode)
+    let kth = nodes[k - 1]
+    return kth
+};
+
+let treeRoot = new TreeNode(3)
+treeRoot.left = new TreeNode(1)
+treeRoot.right = new TreeNode(4)
+treeRoot.left.right = new TreeNode(2)
+console.log(kthSmallest(treeRoot, 1));
