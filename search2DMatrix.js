@@ -57,45 +57,101 @@
         return false
 */
 
+
+// OLD SOLUTION WITHOUT IDEAL TIME COMPLEXITY: 
+
+/*
+    const searchMatrix = (matrix, target) => {
+        if (!matrix.length) {
+            return false
+        }
+        
+        const bfs = (grid, initial, value) => {
+            let queue = []
+            let length = grid[0].length
+            let height = grid.length
+            let visitedNodes = Array(height).fill([]).map(arr => Array(length).fill(false))
+            let nextRowElem;
+            let nextColElem;
+            queue.push(initial)
+
+            while (queue.length) {
+                let current = queue.shift()
+
+                visitedNodes[current[0]][current[1]] = true
+
+                if (grid[current[0]][current[1]] === value) {
+                    return true
+                    break              
+                } else {
+                    if (grid[current[0]][current[1] + 1] && !visitedNodes[current[0]][current[1] + 1]) {
+                        nextRowElem = [current[0], current[1] + 1]
+                        visitedNodes[current[0]][current[1] + 1] = true
+                        queue.push(nextRowElem)
+                    }
+
+                    if (grid[current[0] + 1] && visitedNodes[current[0] + 1] && !visitedNodes[current[0] + 1][current[1]]) {
+                        nextColElem = [current[0] + 1, current[1]]
+                        visitedNodes[current[0] + 1][current[1]] = true
+                        queue.push(nextColElem)
+                    }
+                }
+            }
+
+            return false
+        }
+
+        return bfs(matrix, [0, 0], target)
+    };
+
+*/
+
+// NEW SOLUTION WITH IDEAL TIME COMPLEXITY: 
+
 const searchMatrix = (matrix, target) => {
     if (!matrix.length) {
         return false
     }
-    
-    const bfs = (grid, initial, value) => {
-        let queue = []
-        let length = grid[0].length
-        let height = grid.length
-        let visitedNodes = Array(height).fill([]).map(arr => Array(length).fill(false))
-        let nextRowElem;
-        let nextColElem;
-        queue.push(initial)
 
-        while (queue.length) {
-            let current = queue.shift()
-
-            visitedNodes[current[0]][current[1]] = true
-
-            if (grid[current[0]][current[1]] === value) {
+    const binarySearch = (arr, val) => {
+        if (arr.length === 1) {
+            if (arr[0] === val) {
                 return true
-                break              
             } else {
-                if (grid[current[0]][current[1] + 1] && !visitedNodes[current[0]][current[1] + 1]) {
-                    nextRowElem = [current[0], current[1] + 1]
-                    visitedNodes[current[0]][current[1] + 1] = true
-                    queue.push(nextRowElem)
-                }
-
-                if (grid[current[0] + 1] && visitedNodes[current[0] + 1] && !visitedNodes[current[0] + 1][current[1]]) {
-                    nextColElem = [current[0] + 1, current[1]]
-                    visitedNodes[current[0] + 1][current[1]] = true
-                    queue.push(nextColElem)
-                }
+                return false
             }
         }
 
-        return false
+        let mid = Math.floor(arr.length / 2)
+        let midVal = arr[mid]
+
+        if (val >= midVal) {
+            let newArr = arr.slice(mid)
+            return binarySearch(newArr, val)
+        } else if (val < midVal) {
+            let newArr = arr.slice(0, mid)
+            return binarySearch(newArr, val)
+        }
     }
 
-    return bfs(matrix, [0, 0], target)
+    let potentialArray = null
+    let included = false
+
+    for (let i = 0; i < matrix.length; i++) {
+        let current = matrix[i]
+        let lowest = current[0]
+        let greatest = current[current.length - 1]
+
+        if (target === lowest || target === greatest) {
+            return true
+        } else if (target > lowest && target < greatest) {
+            potentialArray = current
+            included = binarySearch(potentialArray, target)
+            if (included) {
+                return true
+            }
+        }
+    }
+
+    return included
 };
