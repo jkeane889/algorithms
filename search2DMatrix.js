@@ -58,25 +58,37 @@
 */
 
 const searchMatrix = (matrix, target) => {
+    if (!matrix.length) {
+        return false
+    }
+    
     const bfs = (grid, initial, value) => {
         let queue = []
+        let length = grid[0].length
+        let height = grid.length
+        let visitedNodes = Array(height).fill([]).map(arr => Array(length).fill(false))
         let nextRowElem;
         let nextColElem;
         queue.push(initial)
 
         while (queue.length) {
-            let current = queue.pop()
-            if (grid[current] === value) {
+            let current = queue.shift()
+
+            visitedNodes[current[0]][current[1]] = true
+
+            if (grid[current[0]][current[1]] === value) {
                 return true
                 break              
             } else {
-                if (grid[current[1] + 1]) {
+                if (grid[current[0]][current[1] + 1] && !visitedNodes[current[0]][current[1] + 1]) {
                     nextRowElem = [current[0], current[1] + 1]
+                    visitedNodes[current[0]][current[1] + 1] = true
                     queue.push(nextRowElem)
                 }
 
-                if (grid[current[0] + 1]) {
+                if (grid[current[0] + 1] && visitedNodes[current[0] + 1] && !visitedNodes[current[0] + 1][current[1]]) {
                     nextColElem = [current[0] + 1, current[1]]
+                    visitedNodes[current[0] + 1][current[1]] = true
                     queue.push(nextColElem)
                 }
             }
