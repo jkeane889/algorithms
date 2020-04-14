@@ -92,96 +92,39 @@
 */
 
 const exist = (board, word) => {
-        
-    const bfs = (targetWord, matrix, coordinate) => {
-        let queue = []
-        let height = matrix.length
-        let length = matrix[0].length
-        let visited = Array(height).fill(0).map(arr => Array(length).fill(false))
-    
-        let targetChars = targetWord.split('')
-        let targetWordArr = targetWord.split('')
-        let wordCopy = []
-        
-        queue.push(coordinate)
 
-        let currentDirection = null
-        let directions = {
-            up: ["right", "left", "up"],
-            down: ["right", "left", "down"],
-            left: ["left", "down", "up"],
-            right: ["right", "down", "up"]
+    const dfs = (i, j, I) => {
+        if (I >= word.length) {
+            return true
         }
 
-        while (queue.length) {
-            let pos = queue.shift()
-            let letter = matrix[pos[0]][pos[1]]
-            let targetChar = targetChars.shift()
-
-            if (letter === targetChar && !visited[pos[0]][pos[1]] && !currentDirection) {
-                wordCopy.push(letter)
-                visited[pos[0]][pos[1]] = true
-                if (wordCopy.length === targetWordArr.length) {
-                    return true
-                }
-            } else if (letter === targetChar && !visited[pos[0]][pos[1]] && directions[currentDirection].includes(currentDirection)) {
-                wordCopy.push(letter)
-                visited[pos[0]][pos[1]] = true
-                if (wordCopy.length === targetWordArr.length) {
-                    return true
-                }
-            }
-
-            if (matrix[pos[0] + 1] && currentDirection !== "up") {
-                let potential = matrix[pos[0] + 1][pos[1]]
-                if (potential === targetChars[0]) {
-                    queue.push([pos[0] + 1, pos[1]])
-                    currentDirection = "down"
-                }
-            }
-
-            if (matrix[pos[0] - 1] && currentDirection !== "down") {
-                let potential = matrix[pos[0] - 1][pos[1]]
-                if (potential === targetChars[0]) {
-                    queue.push([pos[0] - 1, pos[1]])
-                    currentDirection = "up"
-                }
-            }
-
-            if (matrix[pos[0]][pos[1] + 1] && currentDirection !== "left") {
-                let potential = matrix[pos[0]][pos[1] + 1]
-                if (potential === targetChars[0]) {
-                    queue.push([pos[0], pos[1] + 1])
-                    currentDirection = "right"
-                }
-            }
-
-            if (matrix[pos[0]][pos[1] - 1] && currentDirection !== "right") {
-                let potential = matrix[pos[0]][pos[1] - 1]
-                if (potential === targetChars[0]) {
-                    queue.push([pos[0], pos[1] - 1])
-                    currentDirection = "left"
-                }
-            }
+        if (i < 0 || j < 0 || i > board.length - 1 || j > board[0].length - 1) {
+            return false
         }
 
-        return false
-    };
+        if (board[i][j] !== word[I]) {
+            return false
+        }
 
+        if (board[i][j] === '*') {
+            return false
+        }
 
-    let firstLetter = word[0]
-    let contained = false
+        board[i][j] = '*'
+
+        let res = (dfs(i, j + 1, I + 1) || dfs(i, j - 1, I + 1) || dfs(i + 1, j, I + 1) || dfs(i - 1, j, I + 1))
+
+        board[i][j] = word[I]
+        return res
+    }
 
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
-            if (firstLetter === board[i][j]) {
-                contained = bfs(word, board, [i, j])
-                if (contained) {
-                    return true
-                }
+            if (dfs(i, j, 0)) {
+                return true
             }
         }
     }
 
-    return contained
+    return false
 };
