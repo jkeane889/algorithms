@@ -91,41 +91,34 @@
 
 */
 
-const stringShift = (s, shift) => {
-    let shiftDirection = 0
+const stringShift = (s, shift) => { 
     let shiftTotal = 0
-    let shiftedWord = s.split('')
 
     for (let i = 0; i < shift.length; i++) {
-        let array = shift[i]
-        if (array[0] === 0) {
-            array[0] = -1
-            array[1] = (array[1] * -1)
+        let direction = shift[i][0]
+        let amount = shift[i][1]
+     
+        if (direction === 0) {
+            shiftTotal -= amount
+        } else {
+            shiftTotal += amount
         }
     }
 
-    for (let j = 0; j < shift.length; j++) {
-        shiftDirection += shift[j][0]
-        shiftTotal += shift[j][1]
+    let newFront;
+    let newBack;
+
+    if (shiftTotal < 0) {
+        shiftTotal = Math.abs(shiftTotal) % s.length
+        newFront = s.substring(shiftTotal)
+        newBack = s.substring(0, shiftTotal)
+    } else if (shiftTotal > 0) {
+        shiftTotal = Math.abs(shiftTotal) % s.length
+        newFront = s.substring(s.length - shiftTotal, s.length)
+        newBack = s.substring(0, s.length - shiftTotal)
+    } else {
+        return s
     }
 
-    if (shiftDirection >= 0) {
-        let iter = 0
-
-        while (iter < shiftTotal) {
-            let lastChar = shiftedWord.pop()
-            shiftedWord.unshift(lastChar)
-            iter += 1
-        }
-    } else if (shiftDirection < 0) {
-        let iter = shiftTotal
-
-        while (iter < 0) {
-            let lastChar = shiftedWord.shift()
-            shiftedWord.push(lastChar)
-            iter += 1
-        }
-    }
-
-    return shiftedWord.join('')
+    return newFront + newBack
 };
