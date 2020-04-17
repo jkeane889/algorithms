@@ -57,45 +57,95 @@
 
 */
 
+// FIRST ATTEMPT
+
+// const lengthOfLIS = nums => {
+//     if (!nums.length) {
+//         return 0
+//     }
+
+//     const dfs = (newArr, origArr) => {
+//         let current = newArr[newArr.length - 1]
+//         let next = origArr[0]
+
+//         if (next < current) {
+//             newArr.pop()
+//             if (newArr[newArr.length - 1] !== next) {
+//                 newArr.push(next)
+//                 return dfs(newArr, origArr.slice(1))
+//             } else {
+//                 return dfs(newArr, origArr.slice(1))
+//             }
+//         }
+
+//         if (!next) {
+//             return newArr
+//         }
+
+//         if (next > current) {
+//             newArr.push(next)
+//             return dfs(newArr, origArr.slice(1))
+//         }
+
+//         return newArr
+//     }
+    
+//     let maxSubsequence = []
+
+//     for (let i = 0; i < nums.length; i++) {
+//         let result = dfs([nums[i]], nums.slice(i + 1))
+//         if (result.length > maxSubsequence.length) {
+//             maxSubsequence = result
+//         }
+//     }
+
+//     return maxSubsequence.length
+// };
+
+// SECOND ATTEMPT - SOLUTION
+
 const lengthOfLIS = nums => {
     if (!nums.length) {
         return 0
     }
 
-    const dfs = (newArr, origArr) => {
-        let current = newArr[newArr.length - 1]
-        let next = origArr[0]
-
-        if (next < current) {
-            newArr.pop()
-            if (newArr[newArr.length - 1] !== next) {
-                newArr.push(next)
-                return dfs(newArr, origArr.slice(1))
+    const binarySearchPosition = (dp, target, hi) => {
+        let lo = 0;
+        
+        while (lo <= hi) {
+            let mid = Math.floor((lo + hi) / 2);
+            if (target === dp[mid]) {
+                return mid;   
+            } else if (target < dp[mid]) {
+                hi = mid - 1;
             } else {
-                return dfs(newArr, origArr.slice(1))
-            }
+                lo = mid + 1;
+            } 
         }
 
-        if (!next) {
-            return newArr
-        }
-
-        if (next > current) {
-            newArr.push(next)
-            return dfs(newArr, origArr.slice(1))
-        }
-
-        return newArr
+        return lo;
     }
     
-    let maxSubsequence = []
-
+    if (nums === null || nums.length === 0) {
+        return 0;
+    }
+    
+    if (nums.length === 1) {
+        return 1
+    }
+    
+    let dp = new Array(nums.length).fill(Number.MAX_SAFE_INTEGER);
+    
     for (let i = 0; i < nums.length; i++) {
-        let result = dfs([nums[i]], nums.slice(i + 1))
-        if (result.length > maxSubsequence.length) {
-            maxSubsequence = result
-        }
+        let pos = binarySearchPosition(dp, nums[i], i);
+        dp[pos] = nums[i];
     }
 
-    return maxSubsequence.length
+    for (let i = dp.length-1; i >= 0; i--) {
+        if (dp[i] !== Number.MAX_SAFE_INTEGER) {
+            return i + 1;
+        }
+    }
+    
+    return 0;
 };
