@@ -76,67 +76,112 @@
                     if it is push that into the queue
 */
 
-const numIslands = grid => {
+
+// ORIGINAL BREADTH FIRST SEARCH BELOW - WAS TOO SLOW! 
+
+// const numIslands = grid => {
+//     if (!grid.length) {
+//         return null
+//     }
+
+//     let islandCount = 0
+//     let length = grid[0].length
+//     let height = grid.length
+//     let visited = Array(height).fill(0).map(arr => Array(length).fill(false))
+    
+//     const bfs = (matrix, coordinate) => {
+//         let queue = []
+
+//         queue.push(coordinate)
+
+//         while (queue.length) {
+//             let element = queue.shift()
+
+//             visited[element[0]][element[1]] = true
+
+//             if (matrix[element[0] + 1]) {
+//                 if (matrix[element[0] + 1][element[1]] === "1" && !visited[element[0] + 1][element[1]]) {
+//                     queue.push([element[0] + 1, element[1]])
+//                 }
+//             }
+
+//             if (matrix[element[0]][element[1] + 1]) {
+//                 if (matrix[element[0]][element[1] + 1] === "1" && !visited[element[0]][element[1] + 1]) {
+//                     queue.push([element[0], element[1] + 1])
+//                 }
+//             }
+
+//             if (matrix[element[0] - 1]) {
+//                 if (matrix[element[0] - 1][element[1]] === "1" && !visited[element[0] - 1][element[1]]) {
+//                     queue.push([element[0] - 1, element[1]])
+//                 }
+//             }
+
+//             if (matrix[element[0]][element[1] - 1]) {
+//                 if (matrix[element[0]][element[1] - 1] === "1" && !visited[element[0]][element[1] - 1]) {
+//                     queue.push([element[0], element[1] - 1])
+//                 }
+//             }
+//         }
+//     }
+
+//     for (let i = 0; i < grid.length; i++) {
+//         for (let j = 0; j < grid[i].length; j++) {
+//             if (grid[i][j] === "1" && !visited[i][j]) {
+//                 bfs(grid, [i, j])
+//                 islandCount += 1
+//             }
+//         }
+//     }
+
+//     return islandCount
+// };
+
+// DEPTH FIRST SEARCH ALGO BELOW - FASTER!
+
+var numIslands = function(grid) {
     if (!grid.length) {
         return null
     }
 
-    let islandCount = 0
-    let length = grid[0].length
-    let height = grid.length
-    let visited = Array(height).fill(0).map(arr => Array(length).fill(false))
+    let islands = 0
     
-    const bfs = (matrix, coordinate) => {
-        let queue = []
-
-        queue.push(coordinate)
-
-        while (queue.length) {
-            let element = queue.shift()
-
-            visited[element[0]][element[1]] = true
-
-            if (matrix[element[0] + 1]) {
-                if (matrix[element[0] + 1][element[1]] === "1" && !visited[element[0] + 1][element[1]]) {
-                    queue.push([element[0] + 1, element[1]])
-                }
+    function deleteIsland(x, y) {
+        grid[y][x] = '.';
+        
+        if (y > 0) {
+            if (grid[y - 1][x] === '1') {
+                deleteIsland(x, y - 1);
             }
+        }
 
-            if (matrix[element[0]][element[1] + 1]) {
-                if (matrix[element[0]][element[1] + 1] === "1" && !visited[element[0]][element[1] + 1]) {
-                    queue.push([element[0], element[1] + 1])
-                }
+        if (y < grid.length - 1) {
+            if (grid[y + 1][x] === '1') {
+                deleteIsland(x, y + 1);
             }
+        }
 
-            if (matrix[element[0] - 1]) {
-                if (matrix[element[0] - 1][element[1]] === "1" && !visited[element[0] - 1][element[1]]) {
-                    queue.push([element[0] - 1, element[1]])
-                }
+        if (x > 0) {
+            if (grid[y][x - 1] === '1') {
+                deleteIsland(x - 1, y);
             }
+        }
 
-            if (matrix[element[0]][element[1] - 1]) {
-                if (matrix[element[0]][element[1] - 1] === "1" && !visited[element[0]][element[1] - 1]) {
-                    queue.push([element[0], element[1] - 1])
-                }
+        if (x < grid[y].length) {
+            if (grid[y][x + 1] === '1') {
+                deleteIsland(x + 1, y);
+            }
+        }    
+    }
+
+    for (var y = 0; y < grid.length; y++) {
+        for (var x = 0; x < grid[y].length; x++) {
+            if (grid[y][x] === '1') {
+                islands++;
+                deleteIsland(x, y);
             }
         }
     }
 
-    for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[i].length; j++) {
-            if (grid[i][j] === "1" && !visited[i][j]) {
-                bfs(grid, [i, j])
-                islandCount += 1
-            }
-        }
-    }
-
-    return islandCount
-};
-
-let mapGrid = [[ '1', '1', '1', '1', '0' ],
-               [ '1', '1', '0', '1', '0' ],
-               [ '1', '1', '0', '0', '0' ],
-               [ '0', '0', '0', '0', '0' ]];
-
-console.log(numIslands(mapGrid));
+    return islands;
+}
