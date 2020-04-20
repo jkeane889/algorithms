@@ -54,3 +54,48 @@
                         currentPalindrome = ''
             
 */
+
+const longestPalindrome = s => {
+    if (!s.length) {
+        return null
+    }
+    
+    let current;
+    let maxPalindrome = ''
+    let stringArray = s.split('')
+
+    const isPalindrome = potential => {
+        let reversed = ''
+
+        for (let i = potential.length - 1; i >= 0; i--) {
+            reversed += potential[i]
+        }
+
+        return (potential === reversed) ? true : false
+    }
+
+    const dfs = (stringArr, firstIteration = true) => {
+        if (!stringArr.length) {
+            return
+        }
+
+        for (let i = 0; i < stringArr.length; i++) {
+            if (firstIteration) {
+                current = ''
+                current += stringArr[i]
+                if (isPalindrome(current) && current.length > maxPalindrome.length) {
+                    maxPalindrome = current
+                }
+                dfs(stringArr.slice(i + 1), false)
+            } else {
+                current += stringArr[i]
+                if (isPalindrome(current) && current.length > maxPalindrome.length) {
+                    maxPalindrome = current
+                }
+            }
+        }
+    }
+
+    dfs(stringArray, true)
+    return maxPalindrome
+};
