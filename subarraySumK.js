@@ -47,3 +47,25 @@
                 dfs (array.slice(1), target)
                 current sum -= element
 */
+
+var subarraySum = function(nums, k) {
+    let sum = 0
+    let count = 0
+
+    if (!nums.length) {
+        return null
+    }
+
+    const map = new Map([[0, 1]])
+
+    for (let i = 0; i < nums.length; i++) {
+        sum += nums[i]
+        if (map.has(sum - k)) {
+            count += map.get(sum - k)
+        }
+
+        map.set(sum, (map.get(sum) || 0) + 1)
+    }
+
+    return count
+};
