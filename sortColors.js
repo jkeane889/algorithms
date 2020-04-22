@@ -95,3 +95,30 @@
 //     return nums
 // };
 
+// SOLUTION CODE USING TWO POINTERS APPROACH
+
+const sortColors = nums => {
+    if (!nums || nums.length === 0) {
+        return nums
+    }
+
+    let left = 0
+    let right = nums.length - 1
+    
+    for (let i = 0; i < nums.length && i <= right; i++) {
+        if (nums[i] === 0) {
+            let temp = nums[left]
+            nums[left] = 0
+            nums[i] = temp
+            left++
+        } else if (nums[i] === 2) {
+            let temp = nums[right]
+            nums[right] = 2
+            nums[i] = temp
+            right--
+            i--
+        }
+    }
+
+    return nums
+}
