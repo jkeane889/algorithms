@@ -219,3 +219,43 @@ FirstUnique.prototype.add = function(value) {
         this.uniqueLinkedList.delete(value)
     }
 };
+
+// OPTIMIZED SOLUTION 
+
+var FirstUnique = function(nums) {
+    this.queue = []
+    this.lookup = {}
+
+    for (let num of nums) {
+        this.add(num)
+    }
+};
+
+FirstUnique.prototype.showFirstUnique = function() {
+    if (!this.queue.length) {
+        return -1
+    }
+
+    let value = this.queue[0]
+
+    while (this.queue.length > 0 && this.lookup[value] && this.lookup[value] >= 2) {
+        this.queue.shift()
+        value = this.queue[0]
+    }
+
+    if (!this.queue.length) {
+        return - 1
+    }
+
+    return this.queue[0]
+};
+
+FirstUnique.prototype.add = function(value) {
+    if (this.lookup[value]) {
+        this.lookup[value] += 1
+    } else {
+        this.lookup[value] = 1
+    }
+
+    this.queue.push(value)
+};
