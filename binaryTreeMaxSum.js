@@ -201,3 +201,18 @@ const maxPathSum = rootNode => {
     getMaxPath(rootNode, 0)
     return maxSum
 };
+
+// Final Solution
+
+var maxPathSum = function(root) {
+    var max = Number.MIN_SAFE_INTEGER;
+    var maxSum = function (node) {
+      if (!node) return 0;
+      var left = Math.max(maxSum(node.left), 0);
+      var right = Math.max(maxSum(node.right), 0);
+      max = Math.max(left + right + node.val, max);
+      return Math.max(left, right) + node.val;
+    };
+    maxSum(root);
+    return max;
+  };
