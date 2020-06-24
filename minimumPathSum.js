@@ -57,6 +57,8 @@
 
 */
 
+// IMPLEMENT USING DJIKSTRA'S ALGORITHM
+
 var minPathSum = function(grid) {
     let minimalSum = null;
 

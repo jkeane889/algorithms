@@ -112,7 +112,6 @@ const leftMostColumnWithOne = binaryMatrix => {
 
                 if (coord[1] - 1 >= 0) {
                     queue.push([0, coord[1] - 1])
-                    
                 }
             }
 

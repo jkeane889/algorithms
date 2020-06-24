@@ -82,8 +82,6 @@ const isValidSequence = function(rootNode, arr) {
         return null
     }
 
-    console.log(rootNode)
-
     let isValid = false
 
     const checkValid = (node, i) => {
