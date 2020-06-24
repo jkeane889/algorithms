@@ -58,8 +58,8 @@ const threeSum = (nums) => {
 
     let sums = {}
 
-    for (let i = 0; i < nums.length; i++) {
-        for (let j = i + 1; j < nums.length; j++) {
+    for (let i = 0; i < nums.length - 2; i++) {
+        for (let j = i + 1; j < nums.length - 1; j++) {
             for (let k = j + 1; k < nums.length; k++) {
                 let newSum = []
                 newSum.push(nums[i], nums[j], nums[k])
@@ -69,13 +69,40 @@ const threeSum = (nums) => {
 
                 if (sum === 0) {
                     newSum.sort()
-                    if (!sums[newSum]) {
-                        sums[newSum] = newSum
-                    }
-                }           
+                    sums[newSum] = newSum
+                }
             }
         }
     }
 
     return Object.values(sums)
+};
+
+// Accepted Solution
+
+var threeSum = function(nums) {
+    if (nums.length < 3) return [];
+    nums.sort(function(a,b) {return a-b});
+    const ans = {};
+    for (let i = 0; i < nums.length; i++) {
+        let target = 0 - nums[i];
+        var l = i+1;
+        var r = nums.length-1;
+        if (target === 0 && nums[l] === 0 && nums[r] === 0 && l !==r) {
+            const sol = [nums[i], nums[l], nums[r]];
+            ans[sol] = 1;
+            continue;
+        }
+        while(l < r) {
+            let sum = nums[l]+nums[r];
+            if (sum === target) {
+                const sol = [nums[i], nums[l], nums[r]];
+                const sorted = sol.sort();
+                ans[sorted] = 1;
+            }
+            if(sum < target) l++;
+            else r--;
+        }
+    }
+    return Object.keys(ans).map(k => k.split(',').map(k => Number(k)));
 };
