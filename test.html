@@ -8,49 +8,78 @@
 <body>
     <script>
 
-        const getMaxHeight = (node) => {
-            if (node === null) {
-                return 0
+        const getDistance = (matrix, x, y) => {
+            let closest = null
+            let booleanArr = Array(matrix.length).fill(0).map(arr => Array(matrix[0].length).fill(false))
+
+            const getClosestZero = (xCord, yCord, current) => {
+                booleanArr[yCord][xCord] = true
+
+                if (matrix[yCord][xCord] === 0) {
+                    if (!closest) {
+                        closest = current
+                        return
+                    } else if (current < closest) {
+                        return current
+                    } else {
+                        return
+                    }
+                }
+
+                if (matrix[yCord - 1] !== undefined) {
+                    if (!booleanArr[yCord - 1][xCord]) {
+                        getClosestZero(xCord, yCord - 1, current += 1)
+                        current -= 1
+                    }
+                }
+
+                if (matrix[yCord][xCord + 1] !== undefined) {
+                    if (!booleanArr[yCord][xCord + 1]) {
+                        getClosestZero(xCord + 1, yCord, current += 1)
+                        current -= 1
+                    }
+                }
+
+                if (matrix[yCord + 1] !== undefined) {
+                    if (!booleanArr[yCord + 1][xCord]) {
+                        getClosestZero(xCord, yCord + 1, current += 1)
+                        current -= 1
+                    }
+                }
+
+                if (matrix[yCord][xCord - 1] !== undefined) {
+                    if (!booleanArr[yCord][xCord - 1]) {
+                        getClosestZero(xCord - 1, yCord, current += 1)
+                        current -= 1
+                    }
+                }
             }
-            const left = getMaxHeight(node.left)
-            const right = getMaxHeight(node.right)
-            return Math.max(left, right) + 1
+
+            getClosestZero(x, y, 0)
+            return closest
         }
 
-        const connect = (node, arr, row, column) => {
-            arr[row][column] = node.val;
-            let diff = 2 ** (arr.length - row - 2)
-            node.left && connect(node.left, arr, row + 1, column - diff)
-            node.right && connect(node.right, arr, row + 1, column + diff)
-        }
-
-        const printTree = (rootNode) => {
-            const height = getMaxHeight(rootNode)
-            const count = (2 ** height) - 1
-            const result = []
-            for (let i = 0; i < height; i++) {
-                result.push(new Array(count).fill(""))
+        const updateMatrix = (matrix) => {
+            if (!matrix.length) {
+                return null
             }
-            connect(rootNode, result, 0, Math.floor(count / 2))
-            return result
+
+            for (let i = 0; i < matrix.length; i++) {
+                for (let j = 0; j < matrix[i].length; j++) {
+                    if (matrix[i][j] !== 0) {
+                        matrix[i][j] = getDistance(matrix, j, i)
+                    }
+                }
+            }
+
+            return matrix
         };
 
-        const TreeNode = function(val) {
-            this.val = val
-            this.left = null
-            this.right = null
-        };
-
-        const newTree = new TreeNode(1);
-        const branch1 = new TreeNode(2);
-        const branch2 = new TreeNode(5);
-        newTree.left = branch1
-        newTree.right = branch2
-        const branch3 = new TreeNode(3);
-        const branch4 = new TreeNode(4);
-        branch1.left = branch3
-        branch3.left = branch4
-        console.log(printTree(newTree))
+        let newMatrix = [[0,0,0],
+                         [0,1,0],
+                         [1,1,1]];
+        
+        console.log(updateMatrix(newMatrix))
 
     </script>
 </body>
