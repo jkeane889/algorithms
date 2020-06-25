@@ -8,34 +8,49 @@
 <body>
     <script>
 
-        const threeSum = (nums) => {
-            if (!nums.length) {
-                return []
+        const getMaxHeight = (node) => {
+            if (node === null) {
+                return 0
             }
+            const left = getMaxHeight(node.left)
+            const right = getMaxHeight(node.right)
+            return Math.max(left, right) + 1
+        }
 
-            let sums = {}
+        const connect = (node, arr, row, column) => {
+            arr[row][column] = node.val;
+            let diff = 2 ** (arr.length - row - 2)
+            node.left && connect(node.left, arr, row + 1, column - diff)
+            node.right && connect(node.right, arr, row + 1, column + diff)
+        }
 
-            for (let i = 0; i < nums.length - 2; i++) {
-                for (let j = i + 1; j < nums.length - 1; j++) {
-                    for (let k = j + 1; k < nums.length; k++) {
-                        let newSum = []
-                        newSum.push(nums[i], nums[j], nums[k])
-                        let sum = newSum .reduce((acc, val) => {
-                            return acc + val
-                        })
-
-                        if (sum === 0) {
-                            newSum.sort()
-                            sums[newSum] = newSum
-                        }
-                    }
-                }
+        const printTree = (rootNode) => {
+            const height = getMaxHeight(rootNode)
+            const count = (2 ** height) - 1
+            const result = []
+            for (let i = 0; i < height; i++) {
+                result.push(new Array(count).fill(""))
             }
-
-            return Object.values(sums)
+            connect(rootNode, result, 0, Math.floor(count / 2))
+            return result
         };
 
-        console.log(threeSum([-1, 0, 1, 2, -1, -4]))
+        const TreeNode = function(val) {
+            this.val = val
+            this.left = null
+            this.right = null
+        };
+
+        const newTree = new TreeNode(1);
+        const branch1 = new TreeNode(2);
+        const branch2 = new TreeNode(5);
+        newTree.left = branch1
+        newTree.right = branch2
+        const branch3 = new TreeNode(3);
+        const branch4 = new TreeNode(4);
+        branch1.left = branch3
+        branch3.left = branch4
+        console.log(printTree(newTree))
 
     </script>
 </body>
