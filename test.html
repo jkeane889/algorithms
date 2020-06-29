@@ -8,78 +8,42 @@
 <body>
     <script>
 
-        const getDistance = (matrix, x, y) => {
-            let closest = null
-            let booleanArr = Array(matrix.length).fill(0).map(arr => Array(matrix[0].length).fill(false))
+        const repeatedStringMatch = (A, B) => {
+            let stringACount = 1
+            let potentialA = A
 
-            const getClosestZero = (xCord, yCord, current) => {
-                booleanArr[yCord][xCord] = true
+            if (B.length > A.length) {
+                let difference = B.length - A.length
+                let minIncrease = Math.floor(difference / A.length)
+                stringACount += minIncrease
+                let i = 0;
 
-                if (matrix[yCord][xCord] === 0) {
-                    if (!closest) {
-                        closest = current
-                        return
-                    } else if (current < closest) {
-                        return current
+                while (i < minIncrease) {
+                    potentialA += A
+                    i++
+                }
+            }
+
+            // abcdabcd
+            for (let j = 0; j < potentialA.length; j++) {
+                if (potentialA[j] === B[0]) {
+                    let potential = potentialA.slice(j, j + B.length)
+                    if (potential === B) {
+                        return stringACount
                     } else {
-                        return
-                    }
-                }
-
-                if (matrix[yCord - 1] !== undefined) {
-                    if (!booleanArr[yCord - 1][xCord]) {
-                        getClosestZero(xCord, yCord - 1, current += 1)
-                        current -= 1
-                    }
-                }
-
-                if (matrix[yCord][xCord + 1] !== undefined) {
-                    if (!booleanArr[yCord][xCord + 1]) {
-                        getClosestZero(xCord + 1, yCord, current += 1)
-                        current -= 1
-                    }
-                }
-
-                if (matrix[yCord + 1] !== undefined) {
-                    if (!booleanArr[yCord + 1][xCord]) {
-                        getClosestZero(xCord, yCord + 1, current += 1)
-                        current -= 1
-                    }
-                }
-
-                if (matrix[yCord][xCord - 1] !== undefined) {
-                    if (!booleanArr[yCord][xCord - 1]) {
-                        getClosestZero(xCord - 1, yCord, current += 1)
-                        current -= 1
+                        potentialA += A
+                        stringACount += 1
+                        j -= 1
                     }
                 }
             }
 
-            getClosestZero(x, y, 0)
-            return closest
-        }
-
-        const updateMatrix = (matrix) => {
-            if (!matrix.length) {
-                return null
-            }
-
-            for (let i = 0; i < matrix.length; i++) {
-                for (let j = 0; j < matrix[i].length; j++) {
-                    if (matrix[i][j] !== 0) {
-                        matrix[i][j] = getDistance(matrix, j, i)
-                    }
-                }
-            }
-
-            return matrix
+            return -1
         };
 
-        let newMatrix = [[0,0,0],
-                         [0,1,0],
-                         [1,1,1]];
-        
-        console.log(updateMatrix(newMatrix))
+        let stringOne = "abcd";
+        let stringTwo = "cdabcdab";
+        console.log(repeatedStringMatch(stringOne, stringTwo))
 
     </script>
 </body>
