@@ -41,19 +41,24 @@
 */
 
 const repeatedStringMatch = (A, B) => {
-    let stringACount = 1
-    let stringACopy = A
+    let stringCounter = 1
+    let potentialA = A
 
-    for (let i = 0; i < stringACopy.length; i++) {
-        let potentialB = stringACopy.slice(i, i + B.length)
-        if (potentialB === B) {
-            return stringACount
-        } else if (potentialB === "") {
-            stringACopy += A
-            stringACount += 1
-            i = -1
-        }
+    while (potentialA.length < B.length) {
+        potentialA += A
+        stringCounter += 1
     }
-    
-    return -1
+
+    if (potentialA.includes(B)) {
+        return stringCounter
+    } else {
+        potentialA += A
+        stringCounter += 1
+    }
+
+    if (potentialA.includes(B)) {
+        return stringCounter
+    } else {
+        return -1 
+    }
 };

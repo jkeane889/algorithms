@@ -9,36 +9,26 @@
     <script>
 
         const repeatedStringMatch = (A, B) => {
-            let stringACount = 1
+            let stringCounter = 1
             let potentialA = A
 
-            if (B.length > A.length) {
-                let difference = B.length - A.length
-                let minIncrease = Math.floor(difference / A.length)
-                stringACount += minIncrease
-                let i = 0;
-
-                while (i < minIncrease) {
-                    potentialA += A
-                    i++
-                }
+            while (potentialA.length < B.length) {
+                potentialA += A
+                stringCounter += 1
             }
 
-            // abcdabcd
-            for (let j = 0; j < potentialA.length; j++) {
-                if (potentialA[j] === B[0]) {
-                    let potential = potentialA.slice(j, j + B.length)
-                    if (potential === B) {
-                        return stringACount
-                    } else {
-                        potentialA += A
-                        stringACount += 1
-                        j -= 1
-                    }
-                }
+            if (potentialA.includes(B)) {
+                return stringCounter
+            } else {
+                potentialA += A
+                stringCounter += 1
             }
 
-            return -1
+            if (potentialA.includes(B)) {
+                return stringCounter
+            } else {
+                return -1 
+            }
         };
 
         let stringOne = "abcd";
